@@ -30,6 +30,22 @@ public class KomaImages {
     public static final int IDX_NARIKEI = 12;
     public static final int IDX_NARIGIN = 13;
 
+    int[] resIds = {
+            R.drawable.fu,
+            R.drawable.hi,
+            R.drawable.kaku,
+            R.drawable.kyo,
+            R.drawable.kei,
+            R.drawable.gin,
+            R.drawable.kin,
+            R.drawable.gyoku,
+            R.drawable.to,
+            R.drawable.ryu,
+            R.drawable.uma,
+            R.drawable.narikyo,
+            R.drawable.narikei,
+            R.drawable.narigin
+    };
 
     public Bitmap getSenteImage(int komaIdx) {
         return senteKomas.get(komaIdx);
@@ -37,21 +53,13 @@ public class KomaImages {
 
     public void loadKomas(int komaSize, Resources resources) {
 
-        loadSenteKoma(komaSize, resources, R.drawable.fu);
-        loadSenteKoma(komaSize, resources, R.drawable.hi);
-        loadSenteKoma(komaSize, resources, R.drawable.kaku);
-        loadSenteKoma(komaSize, resources, R.drawable.kyo);
-        loadSenteKoma(komaSize, resources, R.drawable.kei);
-        loadSenteKoma(komaSize, resources, R.drawable.gin);
-        loadSenteKoma(komaSize, resources, R.drawable.kin);
-        loadSenteKoma(komaSize, resources, R.drawable.gyoku);
-        loadSenteKoma(komaSize, resources, R.drawable.to);
-        loadSenteKoma(komaSize, resources, R.drawable.ryu);
-        loadSenteKoma(komaSize, resources, R.drawable.uma);
-        loadSenteKoma(komaSize, resources, R.drawable.narikyo);
-        loadSenteKoma(komaSize, resources, R.drawable.narikei);
-        loadSenteKoma(komaSize, resources, R.drawable.narigin);
+        for(int resid : resIds) {
+            loadSenteKoma(komaSize, resources, resid);
 
+        }
+        for(int resid : resIds) {
+            loadGoteKoma(komaSize, resources, resid);
+        }
     }
 
     private void loadSenteKoma(int komaSize, Resources resources, int resid) {
@@ -62,4 +70,15 @@ public class KomaImages {
         senteKomas.add(koma);
     }
 
+    private void loadGoteKoma(int komaSize, Resources resources, int resid) {
+        Bitmap koma = Bitmap.createBitmap(komaSize, komaSize, Bitmap.Config.ARGB_8888);
+        Bitmap tmp = BitmapFactory.decodeResource(resources, resid);
+        GameView.stretchUpsideDown(tmp, koma);
+
+        goteKomas.add(koma);
+    }
+
+    public Bitmap getGoteImage(int komaidx) {
+        return goteKomas.get(komaidx);
+    }
 }

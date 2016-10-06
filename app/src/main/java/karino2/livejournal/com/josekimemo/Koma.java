@@ -16,35 +16,43 @@ public class Koma {
         traits = tr;
     }
 
-    // row, col is 1 origin!
     int row;
     int col;
 
 
     public void draw(Canvas canvas) {
-        int y = offY+(row-1)*(komaSize+lineWidth);
-        int x = offX+(col-1)*(komaSize+lineWidth);
+        int y = offY+row*(komaSize+lineWidth);
+        int x = offX+col*(komaSize+lineWidth);
         canvas.drawBitmap(traits.getImage(), (float)x, (float)y, null);
     }
 
-    public void sente() {
+    public Koma sente() {
         isSente = true;
+        return this;
     }
 
-    public void gote() {
+    public Koma gote() {
         isSente = false;
+        return this;
     }
 
     int offX;
     int offY;
 
-    // 1 origin.
-    public void pos(int offX, int offY, int row, int col) {
+    public Koma offset(int offX, int offY) {
         this.offX = offX;
         this.offY = offY;
 
-        this.row = row;
-        this.col = col;
+        return this;
+    }
+
+    // 1 origin.
+    public Koma pos(int suji, int kurai) {
+
+        this.row = kurai-1;
+        this.col = 9-suji;
+
+        return this;
     }
 
     int lineWidth = 2;

@@ -45,6 +45,20 @@ public class GameView extends View {
     }
 
 
+    public static void stretchUpsideDown(Bitmap src, Bitmap dest)
+    {
+        dest.eraseColor( 0 );
+
+        Canvas canvas = new Canvas( dest );
+        Paint paint = new Paint();
+        paint.setFilterBitmap( true );
+
+        Matrix m = new Matrix();
+        m.postScale( (float)dest.getWidth()/src.getWidth(), (float)dest.getHeight()/src.getHeight() );
+        m.postRotate(180, dest.getWidth()/2, dest.getWidth()/2);
+
+        canvas.drawBitmap(src, m, paint);
+    }
 
     public static void stretch(Bitmap src, Bitmap dest)
     {
@@ -62,30 +76,62 @@ public class GameView extends View {
     boolean initialized = false;
     KomaImages komaImages = new KomaImages();
 
+    int offY;
+    int komaSize;
+
     void initKomas()
     {
         Resources res = getContext().getResources();
-        int komaSize = board.getKomaSize();
-        int offY = board.getOffY();
+        komaSize = board.getKomaSize();
+        offY = board.getOffY();
 
         komaImages.loadKomas(komaSize, res);
 
-        FuTraits fuTraits = new FuTraits(komaImages.getSenteImage(KomaImages.IDX_FU));
+        setupSenteFu(komaSize, offY);
+        setupGoteFu(komaSize, offY);
 
-        // layout sente FU
-        Koma koma;
-        for(int i = 0; i < 9; i++) {
-            koma = new Koma();
-            koma.setKomaSize(komaSize);
-            koma.setKomaTraits(fuTraits);
-            koma.sente();
-            komas.add(koma);
-        }
+        komas.add(
+                makeSenteKoma(new HiTraits(komaImages.getSenteImage(KomaImages.IDX_HI)))
+                .pos(2, 8));
+
+        komas.add(
+                makeGoteKoma(new HiTraits(komaImages.getGoteImage(KomaImages.IDX_HI)))
+                        .pos(8, 2));
+
+    }
+
+    Koma makeKoma(IKomaTraits traits) {
+        Koma koma = new Koma();
+        koma.setKomaSize(komaSize);
+        koma.setKomaTraits(traits);
+        koma.offset(0, offY);
+        return koma;
+    }
+
+    Koma makeSenteKoma(IKomaTraits traits) {
+        return makeKoma(traits).sente();
+    }
+
+    Koma makeGoteKoma(IKomaTraits traits) {
+        return makeKoma(traits).gote();
+    }
+
+    private void setupSenteFu(int komaSize, int offY) {
+        FuTraits fuTraits = new FuTraits(komaImages.getSenteImage(KomaImages.IDX_FU));
 
         for(int i = 0; i < 9; i++) {
             // 1 origin.
-            komas.get(i).pos(0, offY, 7, i+1);
+            komas.add(makeSenteKoma(fuTraits).pos(i+1, 7));
         }
+    }
+
+    private void setupGoteFu(int komaSize, int offY) {
+        FuTraits fuTraits = new FuTraits(komaImages.getGoteImage(KomaImages.IDX_FU));
+
+        for(int i = 0; i < 9; i++) {
+            komas.add(makeGoteKoma(fuTraits).pos(i+1, 3));
+        }
+
     }
 
     @Override
