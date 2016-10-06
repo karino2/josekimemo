@@ -14,6 +14,7 @@ public class Board {
     Rect region = new Rect();
 
     int offY = 80;
+    int offX = 0;
     int lineWidth = 2;
     int komaSize;
 
@@ -25,11 +26,14 @@ public class Board {
 
     void setSize(int w, int h)
     {
-        boardSize = Math.min(w, h);
-        region.set(0, 0, boardSize, boardSize);
+        int minSide = Math.min(w, h);
+        boardSize = (minSide*9)/10;
+        offX = (minSide - boardSize)/2;
+
         komaSize = (boardSize - 10*lineWidth)/9;
 
         offY = komaSize + 40;
+        region.set(offX, offX, boardSize, boardSize);
     }
 
     public int getKomaSize() {
@@ -40,18 +44,22 @@ public class Board {
         return offY;
     }
 
+    public int getOffX() {
+        return offX;
+    }
+
     void draw(Canvas canvas)
     {
         canvas.drawRect(region, backgroundPaint);
 
         for(int i = 0; i < 10; i++) {
             int x = (komaSize+lineWidth)*i;
-            canvas.drawLine(x, offY, x, offY+boardSize, linePaint);
+            canvas.drawLine(offX+x, offY, offX+x, offY+boardSize, linePaint);
         }
 
         for(int j = 0; j < 10; j++){
             int y = offY + (komaSize+lineWidth)*j;
-            canvas.drawLine(0, y, boardSize, y, linePaint);
+            canvas.drawLine(offX, y, offX+boardSize, y, linePaint);
         }
 
     }

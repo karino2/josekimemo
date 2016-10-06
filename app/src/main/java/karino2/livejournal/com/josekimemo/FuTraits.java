@@ -6,14 +6,8 @@ import android.graphics.Bitmap;
  * Created by _ on 2016/10/06.
  */
 public class FuTraits implements IKomaTraits {
-    Bitmap senteKoma;
 
-    public FuTraits(Bitmap sente) {
-        senteKoma = sente;
+    public FuTraits() {
     }
 
-    @Override
-    public Bitmap getImage() {
-        return senteKoma;
-    }
 }

@@ -1,5 +1,6 @@
 package karino2.livejournal.com.josekimemo;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 
@@ -16,6 +17,14 @@ public class Koma {
         traits = tr;
     }
 
+    Bitmap komaImg;
+    Bitmap nariKomaImg;
+
+    public void setKomaImg(Bitmap koma, Bitmap nariKoma) {
+        komaImg = koma;
+        nariKomaImg = nariKoma;
+    }
+
     int row;
     int col;
 
@@ -23,7 +32,7 @@ public class Koma {
     public void draw(Canvas canvas) {
         int y = offY+row*(komaSize+lineWidth);
         int x = offX+col*(komaSize+lineWidth);
-        canvas.drawBitmap(traits.getImage(), (float)x, (float)y, null);
+        canvas.drawBitmap(komaImg, (float)x, (float)y, null);
     }
 
     public Koma sente() {

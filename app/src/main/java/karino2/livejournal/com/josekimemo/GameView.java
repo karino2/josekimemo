@@ -77,6 +77,7 @@ public class GameView extends View {
     KomaImages komaImages = new KomaImages();
 
     int offY;
+    int offX;
     int komaSize;
 
     void initKomas()
@@ -84,52 +85,125 @@ public class GameView extends View {
         Resources res = getContext().getResources();
         komaSize = board.getKomaSize();
         offY = board.getOffY();
+        offX = board.getOffX();
 
         komaImages.loadKomas(komaSize, res);
 
-        setupSenteFu(komaSize, offY);
-        setupGoteFu(komaSize, offY);
+        setupSenteFu(komaSize);
+        setupGoteFu(komaSize);
 
         komas.add(
-                makeSenteKoma(new HiTraits(komaImages.getSenteImage(KomaImages.IDX_HI)))
+                makeSenteKoma(new HiTraits(), KomaImages.IDX_HI)
                 .pos(2, 8));
 
         komas.add(
-                makeGoteKoma(new HiTraits(komaImages.getGoteImage(KomaImages.IDX_HI)))
+                makeGoteKoma(new HiTraits(), KomaImages.IDX_HI)
                         .pos(8, 2));
 
+        // kaku
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KAKU)
+                        .pos(8, 8));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KAKU)
+                        .pos(2, 2));
+
+        // kyo
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KYO)
+                        .pos(1, 9));
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KYO)
+                        .pos(9, 9));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KYO)
+                        .pos(1, 1));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KYO)
+                        .pos(9, 1));
+
+        // kei
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KEI)
+                        .pos(2, 9));
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KEI)
+                        .pos(8, 9));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KEI)
+                        .pos(2, 1));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KEI)
+                        .pos(8, 1));
+
+        // gin
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_GIN)
+                        .pos(3, 9));
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_GIN)
+                        .pos(7, 9));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_GIN)
+                        .pos(3, 1));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_GIN)
+                        .pos(7, 1));
+
+        // kin
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KIN)
+                        .pos(4, 9));
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_KIN)
+                        .pos(6, 9));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KIN)
+                        .pos(4, 1));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_KIN)
+                        .pos(6, 1));
+
+        // gyoku
+        komas.add(
+                makeSenteKoma(null, KomaImages.IDX_GYOKU)
+                        .pos(5, 9));
+        komas.add(
+                makeGoteKoma(null, KomaImages.IDX_GYOKU)
+                        .pos(5, 1));
     }
 
-    Koma makeKoma(IKomaTraits traits) {
+    Koma makeKoma(IKomaTraits traits, Bitmap komaImg) {
         Koma koma = new Koma();
         koma.setKomaSize(komaSize);
         koma.setKomaTraits(traits);
-        koma.offset(0, offY);
+        koma.setKomaImg(komaImg, null);
+        koma.offset(offX, offY);
         return koma;
     }
 
-    Koma makeSenteKoma(IKomaTraits traits) {
-        return makeKoma(traits).sente();
+    Koma makeSenteKoma(IKomaTraits traits, int komaIdx) {
+        return makeKoma(traits, komaImages.getSenteImage(komaIdx)).sente();
     }
 
-    Koma makeGoteKoma(IKomaTraits traits) {
-        return makeKoma(traits).gote();
+    Koma makeGoteKoma(IKomaTraits traits, int komaIdx) {
+        return makeKoma(traits, komaImages.getGoteImage(komaIdx)).gote();
     }
 
-    private void setupSenteFu(int komaSize, int offY) {
-        FuTraits fuTraits = new FuTraits(komaImages.getSenteImage(KomaImages.IDX_FU));
+    private void setupSenteFu(int komaSize) {
+        FuTraits fuTraits = new FuTraits();
 
         for(int i = 0; i < 9; i++) {
             // 1 origin.
-            komas.add(makeSenteKoma(fuTraits).pos(i+1, 7));
+            komas.add(makeSenteKoma(fuTraits, KomaImages.IDX_FU).pos(i+1, 7));
         }
     }
 
-    private void setupGoteFu(int komaSize, int offY) {
-        FuTraits fuTraits = new FuTraits(komaImages.getGoteImage(KomaImages.IDX_FU));
+    private void setupGoteFu(int komaSize) {
+        FuTraits fuTraits = new FuTraits();
 
         for(int i = 0; i < 9; i++) {
-            komas.add(makeGoteKoma(fuTraits).pos(i+1, 3));
+            komas.add(makeGoteKoma(fuTraits, KomaImages.IDX_FU).pos(i+1, 3));
         }
 
     }
