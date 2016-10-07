@@ -10,7 +10,7 @@ import android.graphics.Canvas;
 public class Koma {
 
     int komaSize;
-    boolean isSente = true;
+    boolean sente = true;
 
     IKomaTraits traits;
     public void setKomaTraits(IKomaTraits tr) {
@@ -19,6 +19,8 @@ public class Koma {
 
     Bitmap komaImg;
     Bitmap nariKomaImg;
+
+    public boolean isSente() { return sente; }
 
     public void setKomaImg(Bitmap koma, Bitmap nariKoma) {
         komaImg = koma;
@@ -36,12 +38,12 @@ public class Koma {
     }
 
     public Koma sente() {
-        isSente = true;
+        sente = true;
         return this;
     }
 
     public Koma gote() {
-        isSente = false;
+        sente = false;
         return this;
     }
 
@@ -55,10 +57,21 @@ public class Koma {
         return this;
     }
 
-    // 1 origin.
-    public Koma pos(int suji, int kurai) {
+    public int getSuji() {
+        return 9-col;
+    }
+    public int getDan() {
+        return row+1;
+    }
 
-        this.row = kurai-1;
+    public boolean canMove(int suji, int dan) {
+        return true;
+    }
+
+    // 1 origin.
+    public Koma pos(int suji, int dan) {
+
+        this.row = dan-1;
         this.col = 9-suji;
 
         return this;

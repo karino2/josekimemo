@@ -12,6 +12,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class GameView extends View {
     Rect region = new Rect();
 
     Board board = new Board();
+    Game game = new Game();
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -80,6 +83,12 @@ public class GameView extends View {
     int offX;
     int komaSize;
 
+    void setKoma(int suji, int dan, Koma koma) {
+        koma.pos(suji, dan);
+        komas.add(koma);
+        game.setKoma(suji, dan, koma);
+    }
+
     void initKomas()
     {
         Resources res = getContext().getResources();
@@ -92,85 +101,41 @@ public class GameView extends View {
         setupSenteFu(komaSize);
         setupGoteFu(komaSize);
 
-        komas.add(
-                makeSenteKoma(new HiTraits(), KomaImages.IDX_HI)
-                .pos(2, 8));
-
-        komas.add(
-                makeGoteKoma(new HiTraits(), KomaImages.IDX_HI)
-                        .pos(8, 2));
+        setKoma(2, 8, makeSenteKoma(new HiTraits(), KomaImages.IDX_HI));
+        setKoma(8, 2, makeGoteKoma(new HiTraits(), KomaImages.IDX_HI));
 
         // kaku
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KAKU)
-                        .pos(8, 8));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KAKU)
-                        .pos(2, 2));
+        setKoma(8, 8, makeSenteKoma(null, KomaImages.IDX_KAKU));
+        setKoma(2, 2, makeGoteKoma(null, KomaImages.IDX_KAKU));
 
         // kyo
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KYO)
-                        .pos(1, 9));
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KYO)
-                        .pos(9, 9));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KYO)
-                        .pos(1, 1));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KYO)
-                        .pos(9, 1));
+        setKoma(1, 9, makeSenteKoma(null, KomaImages.IDX_KYO));
+        setKoma(9, 9, makeSenteKoma(null, KomaImages.IDX_KYO));
+        setKoma(1, 1, makeGoteKoma(null, KomaImages.IDX_KYO));
+        setKoma(9, 1, makeGoteKoma(null, KomaImages.IDX_KYO));
 
         // kei
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KEI)
-                        .pos(2, 9));
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KEI)
-                        .pos(8, 9));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KEI)
-                        .pos(2, 1));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KEI)
-                        .pos(8, 1));
+        setKoma(2, 9, makeSenteKoma(null, KomaImages.IDX_KEI));
+        setKoma(8, 9, makeSenteKoma(null, KomaImages.IDX_KEI));
+        setKoma(2, 1, makeGoteKoma(null, KomaImages.IDX_KEI));
+        setKoma(8, 1, makeGoteKoma(null, KomaImages.IDX_KEI));
 
         // gin
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_GIN)
-                        .pos(3, 9));
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_GIN)
-                        .pos(7, 9));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_GIN)
-                        .pos(3, 1));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_GIN)
-                        .pos(7, 1));
+        setKoma(3, 9, makeSenteKoma(null, KomaImages.IDX_GIN));
+        setKoma(7, 9, makeSenteKoma(null, KomaImages.IDX_GIN));
+        setKoma(3, 1, makeGoteKoma(null, KomaImages.IDX_GIN));
+        setKoma(7, 1, makeGoteKoma(null, KomaImages.IDX_GIN));
 
         // kin
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KIN)
-                        .pos(4, 9));
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_KIN)
-                        .pos(6, 9));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KIN)
-                        .pos(4, 1));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_KIN)
-                        .pos(6, 1));
+        setKoma(4, 9, makeSenteKoma(null, KomaImages.IDX_KIN));
+        setKoma(6, 9, makeSenteKoma(null, KomaImages.IDX_KIN));
+        setKoma(4, 1, makeGoteKoma(null, KomaImages.IDX_KIN));
+        setKoma(6, 1, makeGoteKoma(null, KomaImages.IDX_KIN));
 
         // gyoku
-        komas.add(
-                makeSenteKoma(null, KomaImages.IDX_GYOKU)
-                        .pos(5, 9));
-        komas.add(
-                makeGoteKoma(null, KomaImages.IDX_GYOKU)
-                        .pos(5, 1));
+        setKoma(5, 9, makeSenteKoma(null, KomaImages.IDX_GYOKU));
+        setKoma(5, 1, makeGoteKoma(null, KomaImages.IDX_GYOKU));
+
     }
 
     Koma makeKoma(IKomaTraits traits, Bitmap komaImg) {
@@ -195,7 +160,7 @@ public class GameView extends View {
 
         for(int i = 0; i < 9; i++) {
             // 1 origin.
-            komas.add(makeSenteKoma(fuTraits, KomaImages.IDX_FU).pos(i+1, 7));
+            setKoma(i+1, 7, makeSenteKoma(fuTraits, KomaImages.IDX_FU));
         }
     }
 
@@ -203,9 +168,35 @@ public class GameView extends View {
         FuTraits fuTraits = new FuTraits();
 
         for(int i = 0; i < 9; i++) {
-            komas.add(makeGoteKoma(fuTraits, KomaImages.IDX_FU).pos(i+1, 3));
+            setKoma(i+1, 3, makeGoteKoma(fuTraits, KomaImages.IDX_FU));
         }
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                int suji = board.xToSuji(x);
+                int dan = board.yToDan(y);
+                if(suji < 0 || dan < 0) {
+                    break; // need to support mochigoma.
+                }else {
+                    if(game.onTouch(suji, dan)) {
+                        invalidate();
+                    }
+                    return true;
+                }
+                /*
+                if(game.getState() == Game.STATE_SELECT) {
+                    Koma koma = game.getSelected();
+                    Log.d("JosekiMemo", "selected: suji,dan = " + koma.getSuji() + ", " + koma.getDan());
+                }
+                */
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override

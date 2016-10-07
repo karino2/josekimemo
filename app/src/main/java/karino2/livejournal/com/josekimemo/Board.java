@@ -48,6 +48,29 @@ public class Board {
         return offX;
     }
 
+    public int xToSuji(float x) {
+        float relative = x - offX;
+        if(relative < 0) {
+            return -1;
+        }
+        int col = (int)(relative / ((float)(komaSize+lineWidth)));
+        if(col > 8)
+            return -1;
+        return 9-col;
+    }
+
+    public int yToDan(float y) {
+        float relative = y - offY;
+        if(relative < 0)
+            return -1;
+        int row = (int)(relative / ((float)(komaSize+lineWidth)));
+        if (row > 8)
+            return -1;
+        return row+1;
+    }
+
+
+
     void draw(Canvas canvas)
     {
         canvas.drawRect(region, backgroundPaint);
