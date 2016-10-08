@@ -12,9 +12,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -79,7 +79,7 @@ public class GameView extends View {
     boolean initialized = false;
     KomaImages komaImages = new KomaImages();
 
-    int offY;
+    int boardTop;
     int offX;
     int komaSize;
 
@@ -93,7 +93,7 @@ public class GameView extends View {
     {
         Resources res = getContext().getResources();
         komaSize = board.getKomaSize();
-        offY = board.getOffY();
+        boardTop = board.getBoardTop();
         offX = board.getOffX();
 
         komaImages.loadKomas(komaSize, res);
@@ -143,7 +143,7 @@ public class GameView extends View {
         koma.setKomaSize(komaSize);
         koma.setKomaTraits(traits);
         koma.setKomaImg(komaImg, null);
-        koma.offset(offX, offY);
+        koma.offset(offX, boardTop);
         return koma;
     }
 
@@ -173,6 +173,10 @@ public class GameView extends View {
 
     }
 
+    void showMessage(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -184,6 +188,13 @@ public class GameView extends View {
                 if(suji < 0 || dan < 0) {
                     break; // need to support mochigoma.
                 }else {
+                    if ( dan == Board.DAN_GOTE_MOCHIGOMA || dan == Board.DAN_SENTE_MOCHIGOMA) {
+                        if(dan == Board.DAN_GOTE_MOCHIGOMA)
+                            showMessage("gote mochigoma dan");
+                        else
+                            showMessage("sente mochigoma dan");
+                        break;
+                    }
                     if(game.onTouch(suji, dan)) {
                         invalidate();
                     }

@@ -13,10 +13,17 @@ public class Board {
     Paint linePaint = new Paint();
     Rect region = new Rect();
 
-    int offY = 80;
-    int offX = 0;
+    int offY = 20;
+    int offX;
     int lineWidth = 2;
     int komaSize;
+    int goteMochigomaTop;
+    int boardTop;
+    int senteMochigomaTop;
+
+
+    // mochigoma board sep width
+    int mbSepWidth = 5;
 
 
     public Board() {
@@ -32,16 +39,19 @@ public class Board {
 
         komaSize = (boardSize - 10*lineWidth)/9;
 
-        offY = komaSize + 40;
-        region.set(offX, offX, boardSize, boardSize);
+        goteMochigomaTop = offY;
+        boardTop = goteMochigomaTop+komaSize + mbSepWidth;
+        senteMochigomaTop = boardTop+boardSize+mbSepWidth;
+
+        region.set(offX, offX, boardSize+offX, senteMochigomaTop+komaSize+offY);
     }
 
     public int getKomaSize() {
         return komaSize;
     }
 
-    public int getOffY() {
-        return offY;
+    public int getBoardTop() {
+        return boardTop;
     }
 
     public int getOffX() {
@@ -59,10 +69,28 @@ public class Board {
         return 9-col;
     }
 
+    public static final int DAN_GOTE_MOCHIGOMA = 0;
+    public static final int DAN_SENTE_MOCHIGOMA = 10;
+
     public int yToDan(float y) {
-        float relative = y - offY;
-        if(relative < 0)
+        if(y < goteMochigomaTop)
             return -1;
+
+        float relative = y - goteMochigomaTop;
+        if(relative < komaSize)
+            return DAN_GOTE_MOCHIGOMA;
+
+        if(y < boardTop)
+            return -1; // inside mbSep
+
+        if( y > senteMochigomaTop) {
+            if(y < senteMochigomaTop+komaSize)
+                return DAN_SENTE_MOCHIGOMA;
+            else
+                return -1;
+        }
+
+        relative = y - boardTop;
         int row = (int)(relative / ((float)(komaSize+lineWidth)));
         if (row > 8)
             return -1;
@@ -77,11 +105,11 @@ public class Board {
 
         for(int i = 0; i < 10; i++) {
             int x = (komaSize+lineWidth)*i;
-            canvas.drawLine(offX+x, offY, offX+x, offY+boardSize, linePaint);
+            canvas.drawLine(offX+x, boardTop, offX+x, boardTop+boardSize, linePaint);
         }
 
         for(int j = 0; j < 10; j++){
-            int y = offY + (komaSize+lineWidth)*j;
+            int y = boardTop + (komaSize+lineWidth)*j;
             canvas.drawLine(offX, y, offX+boardSize, y, linePaint);
         }
 
