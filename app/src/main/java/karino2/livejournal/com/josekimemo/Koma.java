@@ -11,21 +11,31 @@ public class Koma {
 
     int komaSize;
     boolean sente = true;
+    boolean nari = false;
 
     IKomaTraits traits;
     public void setKomaTraits(IKomaTraits tr) {
         traits = tr;
     }
 
-    Bitmap komaImg;
-    Bitmap nariKomaImg;
+    Bitmap senteImg;
+    Bitmap senteNariImg;
+    Bitmap goteImg;
+    Bitmap goteNariImg;
+
+    int id;
+
+    public Koma(int id_, Bitmap sente, Bitmap nari, Bitmap gote, Bitmap goteNari) {
+        id = id_;
+        senteImg = sente;
+        senteNariImg = nari;
+        goteImg = gote;
+        goteNariImg = goteNari;
+    }
+
+    public int getId() { return id; }
 
     public boolean isSente() { return sente; }
-
-    public void setKomaImg(Bitmap koma, Bitmap nariKoma) {
-        komaImg = koma;
-        nariKomaImg = nariKoma;
-    }
 
     int row;
     int col;
@@ -34,7 +44,20 @@ public class Koma {
     public void draw(Canvas canvas) {
         int y = offY+row*(komaSize+lineWidth);
         int x = offX+col*(komaSize+lineWidth);
-        canvas.drawBitmap(komaImg, (float)x, (float)y, null);
+        canvas.drawBitmap(currentImage(), (float)x, (float)y, null);
+    }
+
+    boolean isNari() { return nari; }
+
+    Bitmap currentImage() {
+        if(isSente()) {
+            if (isNari())
+                return senteNariImg;
+            return senteImg;
+        }
+        if(isNari())
+            return goteNariImg;
+        return goteImg;
     }
 
     public Koma sente() {
@@ -56,6 +79,12 @@ public class Koma {
 
         return this;
     }
+    public boolean isMochigoma() {
+        if(getDan() == 0 || getDan() == 10)
+            return true;
+        return false;
+    }
+
 
     public int getSuji() {
         return 9-col;

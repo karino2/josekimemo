@@ -34,6 +34,8 @@ public class GameView extends View {
     Paint backgroundPaint = new Paint();
 
     ArrayList<Koma> komas = new ArrayList<Koma>();
+    Mochigomas senteMochigoma = new Mochigomas();
+    Mochigomas goteMochigoma = new Mochigomas();
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -96,6 +98,12 @@ public class GameView extends View {
         boardTop = board.getBoardTop();
         offX = board.getOffX();
 
+        game.setMochigomas(senteMochigoma, goteMochigoma);
+
+        int lineWidth = 2;
+        senteMochigoma.offset(offX, board.getSenteMochigomaTop(), komaSize+lineWidth);
+        goteMochigoma.offset(offX, board.getGoteMochigomaTop(), komaSize+lineWidth);
+
         komaImages.loadKomas(komaSize, res);
 
         setupSenteFu(komaSize);
@@ -138,21 +146,22 @@ public class GameView extends View {
 
     }
 
-    Koma makeKoma(IKomaTraits traits, Bitmap komaImg) {
-        Koma koma = new Koma();
+    Koma makeKoma(IKomaTraits traits, int komaIdx)
+    {
+        Koma koma = new Koma(komaIdx, komaImages.getSenteImage(komaIdx), komaImages.getSenteNariImage(komaIdx), komaImages.getGoteImage(komaIdx), komaImages.getGoteNariImage(komaIdx));
         koma.setKomaSize(komaSize);
         koma.setKomaTraits(traits);
-        koma.setKomaImg(komaImg, null);
         koma.offset(offX, boardTop);
         return koma;
     }
 
+
     Koma makeSenteKoma(IKomaTraits traits, int komaIdx) {
-        return makeKoma(traits, komaImages.getSenteImage(komaIdx)).sente();
+        return makeKoma(traits, komaIdx).sente();
     }
 
     Koma makeGoteKoma(IKomaTraits traits, int komaIdx) {
-        return makeKoma(traits, komaImages.getGoteImage(komaIdx)).gote();
+        return makeKoma(traits, komaIdx).gote();
     }
 
     private void setupSenteFu(int komaSize) {
@@ -228,9 +237,12 @@ public class GameView extends View {
 
         board.draw(this.canvas);
         for(Koma koma : komas) {
-            koma.draw(this.canvas);
+            if(!koma.isMochigoma())
+                koma.draw(this.canvas);
         }
 
+        senteMochigoma.draw(this.canvas);
+        goteMochigoma.draw(this.canvas);
 
         canvas.drawBitmap(offScr, region, region, null);
     }

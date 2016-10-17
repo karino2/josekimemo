@@ -13,6 +13,13 @@ public class Game {
 
     int state = STATE_NORMAL;
     boolean issente = true;
+    Mochigomas senteMochigomas;
+    Mochigomas goteMochigomas;
+
+    public void setMochigomas(Mochigomas sente, Mochigomas gote) {
+        senteMochigomas = sente;
+        goteMochigomas = gote;
+    }
 
     public boolean isSente() {
         return issente;
@@ -102,9 +109,16 @@ public class Game {
         if(selected.canMove(suji, dan)) {
             if(selCand == null) {
                 moveKoma(suji, dan, selected);
-                issente = !isSente();
-                selected = null;
-                state = STATE_NORMAL;
+                gotoNextTurn();
+                return true;
+            } else {
+                if(selCand.isSente()) {
+                    gotoGoteMochigoma(selCand);
+                } else {
+                    gotoSenteMochigoma(selCand);
+                }
+                moveKoma(suji, dan, selected);
+                gotoNextTurn();
                 return true;
             }
             // need to support take here.
@@ -112,6 +126,24 @@ public class Game {
         }
 
         return false;
+    }
+
+    private void gotoSenteMochigoma(Koma selCand) {
+        selCand.sente();
+        selCand.pos(0, Board.DAN_SENTE_MOCHIGOMA);
+        senteMochigomas.addKoma(selCand);
+    }
+
+    private void gotoGoteMochigoma(Koma selCand) {
+        selCand.gote();
+        selCand.pos(0, Board.DAN_GOTE_MOCHIGOMA);
+        goteMochigomas.addKoma(selCand);
+    }
+
+    private void gotoNextTurn() {
+        issente = !isSente();
+        selected = null;
+        state = STATE_NORMAL;
     }
 
 }

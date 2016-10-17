@@ -54,6 +54,9 @@ public class Board {
         return boardTop;
     }
 
+    public int getGoteMochigomaTop() { return goteMochigomaTop; }
+    public int getSenteMochigomaTop() { return senteMochigomaTop; }
+
     public int getOffX() {
         return offX;
     }

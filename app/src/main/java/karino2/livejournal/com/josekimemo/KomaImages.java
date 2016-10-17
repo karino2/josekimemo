@@ -30,6 +30,10 @@ public class KomaImages {
     public static final int IDX_NARIKEI = 12;
     public static final int IDX_NARIGIN = 13;
 
+    int toNari(int orgIdx) {
+        return orgIdx + (IDX_TO - IDX_FU);
+    }
+
     int[] resIds = {
             R.drawable.fu,
             R.drawable.hi,
@@ -50,6 +54,22 @@ public class KomaImages {
     public Bitmap getSenteImage(int komaIdx) {
         return senteKomas.get(komaIdx);
     }
+
+    public boolean nariPossible(int komaIdx) {
+        switch(komaIdx) {
+            case IDX_KIN:
+            case IDX_GYOKU:
+                return false;
+        }
+        return true;
+    }
+
+    public Bitmap getSenteNariImage(int komaIdx) {
+        if(nariPossible(komaIdx))
+            return senteKomas.get(toNari(komaIdx));
+        return null;
+    }
+
 
     public void loadKomas(int komaSize, Resources resources) {
 
@@ -80,5 +100,11 @@ public class KomaImages {
 
     public Bitmap getGoteImage(int komaidx) {
         return goteKomas.get(komaidx);
+    }
+    public Bitmap getGoteNariImage(int komaidx)
+    {
+        if(nariPossible(komaidx))
+            return goteKomas.get(toNari(komaidx));
+        return null;
     }
 }
